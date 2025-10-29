@@ -16,10 +16,19 @@ class GameOfLife:
     density: float = 0.2
     wrap: bool = True
     seed: Optional[int] = None
+    initial_state: Optional[np.ndarray] = None
 
     def __post_init__(self) -> None:
         self.random = np.random.default_rng(self.seed)
-        self.state = self._generate_random_state(self.density)
+        if self.initial_state is not None:
+            state = np.array(self.initial_state, dtype=np.uint8, copy=True)
+            if state.shape != (self.rows, self.cols):
+                raise ValueError(
+                    "initial_state must match the configured board dimensions"
+                )
+            self.state = state
+        else:
+            self.state = self._generate_random_state(self.density)
 
     def _generate_random_state(self, density: float) -> np.ndarray:
         density = float(np.clip(density, 0.0, 1.0))
@@ -61,6 +70,14 @@ class GameOfLife:
         if density is not None:
             self.density = float(np.clip(density, 0.0, 1.0))
         self.state = self._generate_random_state(self.density)
+
+    @property
+    def alive_ratio(self) -> float:
+        """Return the fraction of alive cells in the current state."""
+
+        if self.state.size == 0:
+            return 0.0
+        return float(self.state.mean())
 
     def clear(self) -> None:
         """Clear the board, leaving all cells dead."""

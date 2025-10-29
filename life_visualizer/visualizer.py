@@ -18,6 +18,7 @@ class GameOfLifeVisualizer:
     interval: int = 100
     title: str = "Conway's Game of Life"
     cmap: str = "viridis"
+    start_paused: bool = True
     paused: bool = field(default=False, init=False)
     last_fps_update: float = field(default_factory=time.time, init=False)
     frames_since_update: int = field(default=0, init=False)
@@ -27,6 +28,7 @@ class GameOfLifeVisualizer:
         self.figure, self.ax = plt.subplots(figsize=(10, 6), dpi=100)
         self.figure.canvas.mpl_connect("key_press_event", self._on_key_press)
         self.figure.canvas.mpl_connect("button_press_event", self._on_click)
+        self.paused = self.start_paused
         self.image = self.ax.imshow(
             self.game.state,
             interpolation="nearest",
@@ -57,7 +59,11 @@ class GameOfLifeVisualizer:
 
     def _status_text(self) -> str:
         mode = "Paused" if self.paused else "Running"
-        return f"{mode}\n{self.game.rows}×{self.game.cols} | density {self.game.density:.2f}"
+        alive_pct = 100 * self.game.alive_ratio
+        return (
+            f"{mode}\n"
+            f"{self.game.rows}×{self.game.cols} | alive {alive_pct:.1f}%"
+        )
 
     def _update(self, _frame: int):
         if not self.paused:

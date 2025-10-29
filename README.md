@@ -20,6 +20,17 @@ pip install -r requirements.txt
 Execute o visualizador a partir da raiz do repositório:
 
 ```bash
+python -m life_visualizer --rows 180 --cols 640 --density 0.25 --interval 80
+```
+
+Ao iniciar, o tabuleiro exibe a mensagem `// while(true){filosofar(?);}` desenhada com células vivas
+e permanece **pausado** para que a composição seja vista com clareza. Pressione **espaço** quando
+quiser dar início à evolução natural do Jogo da Vida. O tabuleiro possui alta granularidade para que
+o padrão se desenvolva de forma suave durante a apresentação.
+
+### Controles
+
+- **Espaço**: pausa/retoma a simulação (a execução começa pausada)
 python -m life_visualizer --rows 80 --cols 120 --density 0.25 --interval 80
 ```
 

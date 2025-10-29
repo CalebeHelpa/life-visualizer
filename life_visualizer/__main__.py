@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 
+from .banner import DEFAULT_MESSAGE, create_banner_board
 from .simulation import GameOfLife
 from .visualizer import GameOfLifeVisualizer
 
@@ -15,8 +16,18 @@ def parse_args() -> argparse.Namespace:
             "espaço para pausar e o rato para ligar/desligar células."
         )
     )
-    parser.add_argument("--rows", type=int, default=80, help="Número de linhas do tabuleiro")
-    parser.add_argument("--cols", type=int, default=120, help="Número de colunas do tabuleiro")
+    parser.add_argument(
+        "--rows",
+        type=int,
+        default=180,
+        help="Número mínimo de linhas do tabuleiro (ajustado automaticamente se necessário)",
+    )
+    parser.add_argument(
+        "--cols",
+        type=int,
+        default=640,
+        help="Número mínimo de colunas do tabuleiro (ajustado automaticamente se necessário)",
+    )
     parser.add_argument(
         "--density",
         type=float,
@@ -57,17 +68,28 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    banner_state = create_banner_board(
+        max(5, args.rows),
+        max(5, args.cols),
+        text=DEFAULT_MESSAGE,
+        scale=3,
+        spacing=1,
+        margin=12,
+    )
+
     game = GameOfLife(
-        rows=max(5, args.rows),
-        cols=max(5, args.cols),
+        rows=banner_state.shape[0],
+        cols=banner_state.shape[1],
         density=args.density,
         wrap=args.wrap,
         seed=args.seed,
+        initial_state=banner_state,
     )
     visualizer = GameOfLifeVisualizer(
         game,
         interval=max(10, args.interval),
         cmap=args.cmap,
+        start_paused=True,
     )
     visualizer.show()
 
