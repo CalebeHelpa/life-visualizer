@@ -31,6 +31,12 @@ o padrão se desenvolva de forma suave durante a apresentação.
 ### Controles
 
 - **Espaço**: pausa/retoma a simulação (a execução começa pausada)
+python -m life_visualizer --rows 80 --cols 120 --density 0.25 --interval 80
+```
+
+### Controles
+
+- **Espaço**: pausa/retoma a simulação
 - **Seta para cima/baixo**: acelera ou desacelera a animação
 - **R**: gera um novo tabuleiro aleatório com a densidade atual
 - **C**: limpa o tabuleiro
